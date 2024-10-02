@@ -3,13 +3,31 @@ const router=express.Router();
 
 const Subject=require('../models/subject.js')
 
+// router.post('/subjects',async(req,res)=>{
+//     const{ SubjectName }=req.body;
+//     console.log("request body",req.body);
+//     try{
+//         const subjects= await Subject.create({ SubjectName });
+//         res.status(201).json({ classStatus:true, message: "class created successfully", subjects});
+
+//     }
+//     catch(err){
+       
+//         res.status(500).json({ error: "Database error or email already exists" });
+//     }
+// })
 router.post('/subjects',async(req,res)=>{
-    const{ SubjectName }=req.body;
+    const{SubjectName}=req.body;
     console.log("request body",req.body);
     try{
-        const subjects= await Subject.create({ SubjectName });
-        res.status(201).json({ classStatus:true, message: "class created successfully", subjects});
-
+        const findSubject=await Subject.findOne({where:{SubjectName:SubjectName.trim()}});
+        if(findSubject){
+        res.status(401).json({ subjectStatus:false, Error: "subject already exits"});
+        }else{
+            const subjects= await Subject.create({ SubjectName });
+            res.status(201).json({ subjectStatus:true, message: "subject created successfully", subjects});
+        }
+  
     }
     catch(err){
        

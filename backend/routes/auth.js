@@ -9,7 +9,6 @@ const bcrypt = require('bcryptjs');
 
 
 
-
 router.post('/adminlogin', (req, res) => {
     const sql = 'SELECT * FROM admin WHERE email=?';
     
@@ -27,11 +26,11 @@ router.post('/adminlogin', (req, res) => {
                     res.cookie("token", token);
                     return res.json({ loginStatus: true, token });
                 } else {
-                    return res.json({ loginStatus: false, Error: "Wrong email or password" });
+                    return res.json({ loginStatus: false});
                 }
             });
         } else {
-            return res.json({ loginStatus: false, Error: "Wrong email or password" });
+            return res.json({ loginStatus: false, Error: "wrong email or password"});
         }
     });
 });

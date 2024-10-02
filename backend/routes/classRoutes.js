@@ -1,20 +1,39 @@
 const express=require('express');
 const router=express.Router();
 
-const Class=require('../models/class.js')
+const Class=require('../models/class.js');
+const { message } = require('../validators/adminValidation.js');
 
+// router.post('/classes',async(req,res)=>{
+//     const{className}=req.body;
+//     console.log(req.body);
+//     try{
+//         const classes= await Class.create({className});
+//         res.status(201).json({ classStatus:true, message: "class created successfully", classes});
+
+//     }
+//     catch(err){
+//         console.error(error);
+//         res.status(500).json({ error: "Database error or email already exists" });
+//     }
+// })
 router.post('/classes',async(req,res)=>{
     const{className}=req.body;
     console.log(req.body);
     try{
-        const classes= await Class.create({className});
-        res.status(201).json({ classStatus:true, message: "class created successfully", classes});
-
+        const findClass=await Class.findOne({where:{className:className.trim()}});
+        if(findClass){
+            res.status(401).json({classStatus:false,Error:"class name already exits"});
+        }
+        else{
+            const classes= await Class.create({className});
+         res.status(201).json({ classStatus:true, message: "class created successfully", classes});
+        }
     }
     catch(err){
-        console.error(error);
-        res.status(500).json({ error: "Database error or email already exists" });
-    }
+                 console.error(error);
+                 res.status(500).json({ error: "Database error or email already exists" });
+            }
 })
 router.get('/classesList',async(req,res)=>{
 
